@@ -1,0 +1,6 @@
+{
+  "name": "Naleśnikarnia Spełnione Marzenie",
+  "description": "Przytulna kawiarnia w Kamieniu Śląskim serwująca pyszne naleśniki francuskie na słodko i wytrawnie, kawę, lody oraz zimne napoje.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
