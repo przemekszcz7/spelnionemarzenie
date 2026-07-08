@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useState, useRef } from "react";
+import { Menu, X } from "lucide-react";
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -98,12 +99,14 @@ export default function App() {
           <button 
             id="mobile-menu-toggle"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="md:hidden flex flex-col items-center justify-center w-10 h-10 rounded-full bg-accent-terracotta/20 hover:bg-accent-terracotta/40 transition-colors focus:outline-none"
+            className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-accent-terracotta/20 hover:bg-accent-terracotta/40 transition-colors focus:outline-none"
             aria-label="Toggle menu"
           >
-            <div className={`w-5 h-[2px] bg-accent-gold transition-all duration-300 ${isMobileMenuOpen ? "transform rotate-45 translate-y-[5px]" : "mb-[5px]"}`}></div>
-            <div className={`w-5 h-[2px] bg-accent-gold transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : "mb-[5px]"}`}></div>
-            <div className={`w-5 h-[2px] bg-accent-gold transition-all duration-300 ${isMobileMenuOpen ? "transform -rotate-45 -translate-y-[9px]" : ""}`}></div>
+            {isMobileMenuOpen ? (
+              <X className="w-5 h-5 text-accent-gold transition-all duration-300 transform rotate-0 hover:rotate-90" />
+            ) : (
+              <Menu className="w-5 h-5 text-accent-gold transition-all duration-300" />
+            )}
           </button>
 
         </div>
