@@ -62,3 +62,12 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #68826A;
 }
+
+/* Ukrycie paska przewijania */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE i Edge */
+  scrollbar-width: none;  /* Firefox */
+}

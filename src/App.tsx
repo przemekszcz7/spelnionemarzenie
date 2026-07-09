@@ -3,13 +3,139 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useEffect, useState, useRef } from "react";
-import { Menu, X } from "lucide-react";
+import React, { useEffect, useState, useRef } from "react";
+import { 
+  Menu, 
+  X, 
+  ChevronLeft, 
+  ChevronRight, 
+  ChevronDown, 
+  Sparkles, 
+  Info, 
+  Coffee, 
+  IceCream, 
+  GlassWater, 
+  Beer, 
+  Wine, 
+  PartyPopper, 
+  Cake, 
+  Pizza, 
+  Leaf,
+  Utensils,
+  MapPin,
+  Phone,
+  Mail,
+  Facebook,
+  Search
+} from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { 
+  SWEET_PANCAKES, 
+  SAVORY_PANCAKES, 
+  NOVELTIES, 
+  HOT_DRINKS, 
+  COLD_DRINKS, 
+  BEERS, 
+  DRINKS_AND_SHOTS, 
+  GALLERY_IMAGES 
+} from "./data";
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeMenuTab, setActiveMenuTab] = useState("sweet");
+  const [visibleGalleryCount, setVisibleGalleryCount] = useState(12);
+  const [lightboxImageIndex, setLightboxImageIndex] = useState<number | null>(null);
+  const [isZoomed, setIsZoomed] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  
+  // Menu horizontal scrolling controls
+  const menuTabsRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScroll = () => {
+    if (menuTabsRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = menuTabsRef.current;
+      setCanScrollLeft(scrollLeft > 2);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 2);
+    }
+  };
+
+  const handleMenuTabsScroll = (direction: "left" | "right") => {
+    if (menuTabsRef.current) {
+      const scrollAmount = 240;
+      menuTabsRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  useEffect(() => {
+    const el = menuTabsRef.current;
+    if (el) {
+      el.addEventListener("scroll", checkScroll);
+      checkScroll();
+      window.addEventListener("resize", checkScroll);
+    }
+    return () => {
+      if (el) {
+        el.removeEventListener("scroll", checkScroll);
+      }
+      window.removeEventListener("resize", checkScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      checkScroll();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [activeMenuTab]);
+
+  // Lightbox handlers
+  const openLightbox = (index: number) => {
+    setLightboxImageIndex(index);
+    setIsZoomed(false);
+  };
+
+  const closeLightbox = () => {
+    setLightboxImageIndex(null);
+    setIsZoomed(false);
+  };
+
+  const showPrevImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (lightboxImageIndex !== null) {
+      setLightboxImageIndex((prevIndex) => 
+        prevIndex === 0 ? GALLERY_IMAGES.length - 1 : prevIndex! - 1
+      );
+      setIsZoomed(false);
+    }
+  };
+
+  const showNextImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (lightboxImageIndex !== null) {
+      setLightboxImageIndex((prevIndex) => 
+        prevIndex === GALLERY_IMAGES.length - 1 ? 0 : prevIndex! + 1
+      );
+      setIsZoomed(false);
+    }
+  };
+
+  // Keyboard navigation for Lightbox
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (lightboxImageIndex === null) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") showPrevImage();
+      if (e.key === "ArrowRight") showNextImage();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxImageIndex]);
 
   // Scroll effect on header
   useEffect(() => {
@@ -88,7 +214,10 @@ export default function App() {
               O nas
             </a>
             <a href="#menu" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
-              Co serwujemy
+              Menu
+            </a>
+            <a href="#galeria" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
+              Galeria
             </a>
             <a href="#kontakt" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
               Kontakt
@@ -130,7 +259,14 @@ export default function App() {
               onClick={() => setIsMobileMenuOpen(false)}
               className="font-sans text-lg font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors"
             >
-              Co serwujemy
+              Menu
+            </a>
+            <a 
+              href="#galeria" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="font-sans text-lg font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors"
+            >
+              Galeria
             </a>
             <a 
               href="#kontakt" 
@@ -148,7 +284,7 @@ export default function App() {
         id="hero"
         className="relative min-h-screen flex items-center justify-center text-center px-6 overflow-hidden bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(35,43,36,0.6) 0%, rgba(35,43,36,0.8) 60%, rgba(35,43,36,0.96) 100%), url('https://i.ibb.co/ZRWcq6QD/649102734-26219964550948472-204026828541114034-n.jpg')`
+          backgroundImage: `linear-gradient(to bottom, rgba(35,43,36,0.3) 0%, rgba(35,43,36,0.45) 60%, rgba(35,43,36,0.7) 100%), url('https://i.ibb.co/ZRWcq6QD/649102734-26219964550948472-204026828541114034-n.jpg')`
         }}
       >
         <div className="max-w-4xl mx-auto flex flex-col items-center pt-20">
@@ -156,7 +292,7 @@ export default function App() {
           {/* Dekoracyjna etykieta */}
           <p 
             id="hero-label"
-            className="font-cursive text-xl md:text-2xl text-accent-gold mb-4 animate-fade-in-up"
+            className="font-cursive text-xl md:text-2xl text-accent-gold mb-4 animate-fade-in-up drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
             style={{ animationDelay: "0.1s" }}
           >
             ✦ w sercu Kamienia Śląskiego ✦
@@ -165,7 +301,7 @@ export default function App() {
           {/* Główny tytuł */}
           <h1 
             id="hero-title"
-            className="font-serif leading-none text-center select-none flex flex-col items-center animate-fade-in-up"
+            className="font-serif leading-none text-center select-none flex flex-col items-center animate-fade-in-up drop-shadow-[0_3px_6px_rgba(0,0,0,0.75)]"
             style={{ animationDelay: "0.2s" }}
           >
             <span className="text-[54px] md:text-[98px] text-[#FFF8EE] font-normal italic leading-tight">
@@ -179,14 +315,14 @@ export default function App() {
           {/* Cienka dekoracyjna linia */}
           <div 
             id="hero-divider"
-            className="w-20 h-[3px] bg-accent-terracotta my-7 rounded-full animate-fade-in-up"
+            className="w-20 h-[3px] bg-accent-terracotta my-7 rounded-full animate-fade-in-up shadow-sm"
             style={{ animationDelay: "0.3s" }}
           ></div>
 
           {/* Podtytuł */}
           <p 
             id="hero-sub"
-            className="font-sans text-lg md:text-2xl text-accent-wheat font-light tracking-[1px] max-w-2xl px-4 animate-fade-in-up"
+            className="font-sans text-lg md:text-2xl text-accent-wheat font-light tracking-[1px] max-w-2xl px-4 animate-fade-in-up drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]"
             style={{ animationDelay: "0.4s" }}
           >
             Pyszne naleśniki francuskie na słodko i wytrawnie
@@ -195,7 +331,7 @@ export default function App() {
           {/* Opis */}
           <p 
             id="hero-desc"
-            className="font-mono text-xs md:text-sm text-accent-wheat/70 tracking-[4px] mt-3 uppercase animate-fade-in-up"
+            className="font-mono text-xs md:text-sm text-accent-wheat/80 tracking-[4px] mt-3 uppercase animate-fade-in-up drop-shadow-[0_2px_3px_rgba(0,0,0,0.85)]"
             style={{ animationDelay: "0.5s" }}
           >
             Kawa · Lody · Zimne napoje
@@ -227,11 +363,11 @@ export default function App() {
         <a 
           id="hero-arrow"
           href="#promo-banner" 
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-accent-gold text-3xl select-none hover:text-[#FFF8EE] transition-colors"
+          className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-accent-gold select-none hover:text-[#FFF8EE] transition-colors"
           aria-label="Scroll down"
         >
-          <div className="animate-bounce text-accent-gold">
-            ↓
+          <div className="animate-bounce text-accent-gold p-2 bg-black/20 backdrop-blur-sm rounded-full border border-white/10">
+            <ChevronDown className="w-6 h-6" />
           </div>
         </a>
       </header>
@@ -243,7 +379,7 @@ export default function App() {
       >
         <div className="max-w-[1140px] mx-auto">
           <p className="font-cursive text-xl md:text-[23px] text-[#FFF8EE] leading-relaxed">
-            „Wpadajcie na pyszne naleśniki, aromatyczną kawę, lody i coś zimnego do picia 🥞☕🍦”
+            „Wpadajcie na pyszne naleśniki, aromatyczną kawę, lody i coś zimnego do picia”
           </p>
         </div>
       </section>
@@ -278,17 +414,17 @@ export default function App() {
               {/* Trzy małe ikony-fakty */}
               <div className="flex flex-row flex-wrap gap-8 md:gap-10 mt-10" id="about-facts">
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-                  <span className="text-[34px] mb-2 filter drop-shadow">🥞</span>
+                  <Utensils className="w-8 h-8 text-accent-terracotta mb-2.5" />
                   <span className="font-sans text-xs uppercase tracking-[2px] text-accent-terracotta font-bold">Naleśniki</span>
                   <span className="font-sans text-[11px] text-text-sub uppercase mt-1 tracking-wider">Słodkie i wytrawne</span>
                 </div>
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-                  <span className="text-[34px] mb-2 filter drop-shadow">☕</span>
+                  <Coffee className="w-8 h-8 text-accent-terracotta mb-2.5" />
                   <span className="font-sans text-xs uppercase tracking-[2px] text-accent-terracotta font-bold">Kawa</span>
                   <span className="font-sans text-[11px] text-text-sub uppercase mt-1 tracking-wider">Aromatyczne espresso</span>
                 </div>
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-                  <span className="text-[34px] mb-2 filter drop-shadow">🍦</span>
+                  <IceCream className="w-8 h-8 text-accent-terracotta mb-2.5" />
                   <span className="font-sans text-xs uppercase tracking-[2px] text-accent-terracotta font-bold">Lody</span>
                   <span className="font-sans text-[11px] text-text-sub uppercase mt-1 tracking-wider">Słodkie chwile</span>
                 </div>
@@ -318,7 +454,7 @@ export default function App() {
 
                 {/* Dodatkowe kółko z boku dla asymetrii */}
                 <div className="absolute -bottom-6 -left-6 w-20 h-20 rounded-full bg-[#FAF8F4]/90 border border-accent-gold/30 backdrop-blur-sm flex items-center justify-center shadow-md">
-                  <span className="text-2xl select-none">🥞</span>
+                  <Utensils className="w-6 h-6 text-accent-terracotta" />
                 </div>
 
                 {/* Subtelny napis wokół okręgu */}
@@ -334,7 +470,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* 6. SEKCJA „CO SERWUJEMY" — id="menu" */}
+      {/* 6. SEKCJA „MENU" — id="menu" */}
       <section 
         id="menu" 
         className="py-24 bg-warm-apricot relative border-y border-accent-terracotta/10"
@@ -344,121 +480,276 @@ export default function App() {
           {/* Nagłówek sekcji */}
           <div className="text-center max-w-2xl mx-auto mb-16 fade-in-on-scroll opacity-0" id="menu-header">
             <span className="font-mono text-xs text-accent-terracotta tracking-[4px] uppercase block mb-2">
-              — co podajemy —
+              — menu kawiarni —
             </span>
             <h2 className="font-serif text-3xl md:text-[48px] text-dark-choco font-bold">
-              Co serwujemy
+              Nasze Menu
             </h2>
             <p className="font-sans text-base md:text-lg text-text-sub mt-4 font-light leading-relaxed">
-              Każdy kęs to mała uczta. Poznaj nasze stałe i wyjątkowe propozycje przygotowywane każdego dnia z sercem.
+              Poznaj nasze stałe i wyjątkowe propozycje przygotowywane każdego dnia z sercem i pasją.
             </p>
             <div className="w-[60px] h-1 bg-accent-terracotta mx-auto mt-6 rounded-full"></div>
           </div>
 
-          {/* Trzy kolumny propozycji */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch" id="menu-grid">
-            
-            {/* Kolumna 1 — Na Słodko 🍓 */}
-            <div className="bg-warm-cream/50 p-6 md:p-8 rounded-2xl shadow-sm border border-accent-terracotta/5 fade-in-on-scroll opacity-0 flex flex-col justify-between" id="menu-sweet">
-              <div>
-                <div className="flex items-center gap-3 mb-6 border-b-2 border-accent-terracotta/15 pb-4">
-                  <span className="text-3xl select-none">🍓</span>
-                  <h3 className="font-serif text-xl md:text-2xl text-accent-terracotta font-bold italic leading-none">
-                    Na Słodko
-                  </h3>
-                </div>
+          {/* Kategorie menu w postaci eleganckich zakładek z przyciskami przewijania */}
+          <div className="relative w-full mb-12 group/tabs" id="menu-tabs-container">
+            {/* Przycisk lewo */}
+            <AnimatePresence>
+              {canScrollLeft && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  onClick={() => handleMenuTabsScroll("left")}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/95 border border-accent-gold/40 text-accent-terracotta shadow-md flex items-center justify-center hover:bg-accent-terracotta hover:text-white hover:border-accent-terracotta transition-all cursor-pointer"
+                  aria-label="Przewiń menu w lewo"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </motion.button>
+              )}
+            </AnimatePresence>
 
-                <div className="text-[14px] md:text-[15px] text-text-sub font-light leading-relaxed space-y-3">
-                  <p>
-                    Rozpływające się w ustach, złociste naleśniki przygotowywane na bazie tradycyjnego, lekkiego ciasta. To idealny wybór dla miłośników słodkich francuskich crepe'ów i domowych, owocowych aromatów.
-                  </p>
-                  <p>
-                    Serwujemy je wyłącznie w wersji słodkiej ze wspaniałymi dodatkami ze spiżarni, owocami, kremami i puszystą bitą śmietaną.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-8 pt-4 border-t border-dashed border-accent-terracotta/15 text-center">
-                <span className="font-mono text-[11px] uppercase tracking-wider text-accent-terracotta bg-accent-gold/15 px-3 py-1.5 rounded-full inline-block">
-                  Słodkie naleśniki
-                </span>
-              </div>
-            </div>
-
-            {/* Kolumna 2 — Na Wytrawnie 🧀 */}
-            <div className="bg-warm-cream/50 p-6 md:p-8 rounded-2xl shadow-sm border border-accent-terracotta/5 fade-in-on-scroll opacity-0 flex flex-col justify-between" id="menu-savory">
-              <div>
-                <div className="flex items-center gap-3 mb-6 border-b-2 border-accent-terracotta/15 pb-4">
-                  <span className="text-3xl select-none">🧀</span>
-                  <h3 className="font-serif text-xl md:text-2xl text-accent-terracotta font-bold italic leading-none">
-                    Na Wytrawnie
-                  </h3>
-                </div>
-
-                <div className="text-[14px] md:text-[15px] text-text-sub font-light leading-relaxed space-y-3">
-                  <p>
-                    Dla tych, którzy szukają czegoś bardziej sycącego, przygotowaliśmy pyszne naleśniki w odsłonie słonej ze smakowitym, gorącym i ciągnącym się wnętrzem.
-                  </p>
-                  <p>
-                    Wspaniała i pożywna propozycja na udany obiad, ciepły lunch lub kolację z idealnie skomponowanymi, tradycyjnymi i świeżymi składnikami.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-8 pt-4 border-t border-dashed border-accent-terracotta/15 text-center">
-                <span className="font-mono text-[11px] uppercase tracking-wider text-accent-terracotta bg-accent-gold/15 px-3 py-1.5 rounded-full inline-block">
-                  Naleśniki wytrawne
-                </span>
+            <div 
+              ref={menuTabsRef}
+              className="w-full overflow-x-auto no-scrollbar pb-2" 
+              id="menu-tabs"
+            >
+              <div className="flex justify-start md:justify-center gap-3 min-w-max px-12 md:px-8 py-2">
+                {[
+                  { id: "sweet", label: "Naleśniki Słodkie", icon: Cake },
+                  { id: "savory", label: "Naleśniki Wytrawne", icon: Utensils },
+                  { id: "novelties", label: "Nowości", icon: Sparkles },
+                  { id: "hot", label: "Napoje Gorące", icon: Coffee },
+                  { id: "drinks", label: "Napoje, Piwa & Drinki", icon: Wine },
+                  { id: "info", label: "Urodziny & Imprezy", icon: PartyPopper }
+                ].map((tab) => {
+                  const IconComponent = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveMenuTab(tab.id)}
+                      className={`px-5 py-3 rounded-full text-[13px] md:text-[14px] font-sans font-bold uppercase tracking-[1px] transition-all duration-300 flex items-center gap-2 select-none shrink-0 cursor-pointer ${
+                        activeMenuTab === tab.id
+                          ? "bg-accent-terracotta text-white shadow-md scale-105 border border-accent-terracotta"
+                          : "bg-white/50 text-text-sub hover:bg-white/85 hover:text-dark-choco border border-accent-terracotta/10"
+                      }`}
+                    >
+                      <IconComponent className="w-4 h-4" />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Kolumna 3 — Leberkäse 🍖 */}
-            <div className="bg-warm-cream/50 p-6 md:p-8 rounded-2xl shadow-sm border border-accent-terracotta/5 fade-in-on-scroll opacity-0 flex flex-col justify-between" id="menu-leberkase">
-              <div>
-                <div className="flex items-center gap-3 mb-6 border-b-2 border-accent-terracotta/15 pb-4">
-                  <span className="text-3xl select-none">🍖</span>
-                  <h3 className="font-serif text-xl md:text-2xl text-accent-terracotta font-bold italic leading-none">
-                    Leberkäse
-                  </h3>
-                </div>
+            {/* Przycisk prawo */}
+            <AnimatePresence>
+              {canScrollRight && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  onClick={() => handleMenuTabsScroll("right")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/95 border border-accent-gold/40 text-accent-terracotta shadow-md flex items-center justify-center hover:bg-accent-terracotta hover:text-white hover:border-accent-terracotta transition-all cursor-pointer"
+                  aria-label="Przewiń menu w prawo"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
 
-                <div className="text-[14px] md:text-[15px] text-text-sub font-light leading-relaxed space-y-3">
-                  <p>
-                    Wyjątkowa i niezwykle lubiana, tradycyjna specjalność – aromatyczny, pieczony klops mięsny (Leberkäse), podawany w naszej kawiarni na gorąco.
-                  </p>
-                  <p>
-                    Zachwyca chrupiącą skórką, idealnie miękkim, soczystym wnętrzem oraz tradycyjnym, głębokim smakiem, który wspaniale pasuje na pożywny posiłek o każdej porze dnia.
+          {/* Dynamiczne renderowanie zawartości zakładki */}
+          <div className="min-h-[300px]" id="menu-tabs-content">
+            {activeMenuTab === "sweet" && (
+              <div className="animate-fade-in-up">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-5">
+                  {SWEET_PANCAKES.map((item) => (
+                    <div key={item.id} className="flex items-baseline justify-between py-3 border-b border-accent-terracotta/10 hover:bg-white/20 px-3 rounded-lg transition-colors">
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-[11px] text-accent-terracotta bg-accent-terracotta/10 px-2 py-0.5 rounded font-bold">{item.id}</span>
+                        <span className="font-sans font-bold text-[14px] md:text-[15px] text-dark-choco uppercase tracking-wide leading-tight">{item.name}</span>
+                      </div>
+                      <div className="flex-grow mx-3 border-b border-dashed border-accent-gold/40"></div>
+                      <span className="font-sans font-bold text-[14px] md:text-[15px] text-accent-brown whitespace-nowrap">{item.price}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-10 p-5 bg-[#FAF8F4] border border-accent-gold/25 rounded-2xl flex items-center justify-center gap-3 max-w-xl mx-auto shadow-sm">
+                  <Sparkles className="w-5 h-5 text-accent-gold shrink-0" />
+                  <p className="font-sans text-[13px] md:text-[14px] font-bold text-accent-brown uppercase tracking-wider">
+                    Sos do wyboru: czekoladowy, truskawkowy — 2,00 zł
                   </p>
                 </div>
               </div>
-              <div className="mt-8 pt-4 border-t border-dashed border-accent-terracotta/15 text-center">
-                <span className="font-mono text-[11px] uppercase tracking-wider text-accent-terracotta bg-accent-gold/15 px-3 py-1.5 rounded-full inline-block">
-                  Tradycyjny przysmak
-                </span>
-              </div>
-            </div>
+            )}
 
+            {activeMenuTab === "savory" && (
+              <div className="animate-fade-in-up">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-5">
+                  {SAVORY_PANCAKES.map((item) => (
+                    <div key={item.id} className="flex items-baseline justify-between py-3 border-b border-accent-terracotta/10 hover:bg-white/20 px-3 rounded-lg transition-colors">
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-[11px] text-accent-terracotta bg-accent-terracotta/10 px-2 py-0.5 rounded font-bold">{item.id}</span>
+                        <span className="font-sans font-bold text-[14px] md:text-[15px] text-dark-choco uppercase tracking-wide leading-tight">{item.name}</span>
+                      </div>
+                      <div className="flex-grow mx-3 border-b border-dashed border-accent-gold/40"></div>
+                      <span className="font-sans font-bold text-[14px] md:text-[15px] text-accent-brown whitespace-nowrap">{item.price}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-10 p-5 bg-[#FAF8F4] border border-accent-gold/25 rounded-2xl flex items-center justify-center gap-3 max-w-xl mx-auto shadow-sm">
+                  <Leaf className="w-5 h-5 text-accent-gold shrink-0" />
+                  <p className="font-sans text-[13px] md:text-[14px] font-bold text-accent-brown uppercase tracking-wider">
+                    Sos do wyboru: czosnkowy, koperkowy, pikantny, ketchup — 2,00 zł
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {activeMenuTab === "novelties" && (
+              <div className="animate-fade-in-up max-w-3xl mx-auto space-y-6">
+                {NOVELTIES.map((item, index) => (
+                  <div key={index} className="bg-white/50 p-6 rounded-2xl border border-accent-gold/20 shadow-sm hover:border-accent-gold/50 transition-all hover:scale-[1.01]">
+                    <div className="flex items-baseline justify-between gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="inline-block bg-accent-gold/20 text-accent-brown font-mono text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded">Nowość!</span>
+                        <h4 className="font-serif text-lg md:text-xl font-bold text-dark-choco">{item.name}</h4>
+                      </div>
+                      <div className="flex-grow border-b border-dashed border-accent-gold/40"></div>
+                      <span className="font-sans font-bold text-lg text-accent-brown">{item.price}</span>
+                    </div>
+                    <p className="font-sans text-sm text-text-sub mt-2 italic font-light">
+                      {item.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeMenuTab === "hot" && (
+              <div className="animate-fade-in-up max-w-3xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                  {HOT_DRINKS.map((item, index) => (
+                    <div key={index} className="flex items-baseline justify-between py-2 border-b border-accent-terracotta/10 hover:bg-white/10 px-3 rounded-lg transition-colors">
+                      <span className="font-sans font-bold text-[14px] md:text-[15px] text-dark-choco uppercase tracking-wide">{item.name}</span>
+                      <div className="flex-grow mx-3 border-b border-dashed border-accent-gold/40"></div>
+                      <span className="font-sans font-bold text-[14px] md:text-[15px] text-accent-brown">{item.price}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeMenuTab === "drinks" && (
+              <div className="animate-fade-in-up grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Zimne Napoje */}
+                <div className="bg-[#FAF8F4]/40 p-6 rounded-2xl border border-accent-terracotta/5">
+                  <h4 className="font-serif text-lg font-bold text-accent-terracotta border-b-2 border-accent-terracotta/15 pb-2 mb-4 uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                    <GlassWater className="w-5 h-5" />
+                    <span>Napoje Zimne</span>
+                  </h4>
+                  <div className="space-y-4">
+                    {COLD_DRINKS.map((item, index) => (
+                      <div key={index} className="flex flex-col border-b border-accent-terracotta/5 pb-2">
+                        <div className="flex items-baseline justify-between">
+                          <span className="font-sans font-bold text-sm text-dark-choco uppercase tracking-wide">{item.name}</span>
+                          <span className="font-sans font-bold text-sm text-accent-brown">{item.price}</span>
+                        </div>
+                        {item.desc && <span className="text-xs text-text-sub italic">{item.desc}</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Piwa */}
+                <div className="bg-[#FAF8F4]/40 p-6 rounded-2xl border border-accent-terracotta/5">
+                  <h4 className="font-serif text-lg font-bold text-accent-terracotta border-b-2 border-accent-terracotta/15 pb-2 mb-4 uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                    <Beer className="w-5 h-5" />
+                    <span>Piwa</span>
+                  </h4>
+                  <div className="space-y-4">
+                    {BEERS.map((item, index) => (
+                      <div key={index} className="flex flex-col border-b border-accent-terracotta/5 pb-2">
+                        <div className="flex items-baseline justify-between gap-1">
+                          <span className="font-sans font-bold text-sm text-dark-choco uppercase tracking-wide leading-tight">{item.name}</span>
+                          <span className="font-sans font-bold text-sm text-accent-brown whitespace-nowrap">{item.price}</span>
+                        </div>
+                        {item.desc && <span className="text-xs text-text-sub italic">{item.desc}</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Drink & Shots */}
+                <div className="bg-[#FAF8F4]/40 p-6 rounded-2xl border border-accent-terracotta/5">
+                  <h4 className="font-serif text-lg font-bold text-accent-terracotta border-b-2 border-accent-terracotta/15 pb-2 mb-4 uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                    <Wine className="w-5 h-5" />
+                    <span>Drink & Shots</span>
+                  </h4>
+                  <div className="space-y-4">
+                    {DRINKS_AND_SHOTS.map((item, index) => (
+                      <div key={index} className="flex flex-col border-b border-accent-terracotta/5 pb-2">
+                        <div className="flex items-baseline justify-between gap-1">
+                          <span className="font-sans font-bold text-sm text-dark-choco uppercase tracking-wide leading-tight">{item.name}</span>
+                          <span className="font-sans font-bold text-sm text-accent-brown whitespace-nowrap">{item.price}</span>
+                        </div>
+                        {item.desc && <span className="text-xs text-text-sub italic">{item.desc}</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeMenuTab === "info" && (
+              <div className="animate-fade-in-up max-w-2xl mx-auto bg-white/50 p-8 rounded-3xl border border-accent-gold/30 shadow-md text-center">
+                <PartyPopper className="w-12 h-12 text-accent-gold mx-auto mb-4" />
+                <h4 className="font-serif text-2xl font-bold text-dark-choco mb-2">Organizujemy imprezy urodzinowe!</h4>
+                <p className="font-sans text-text-sub font-light mb-6 max-w-md mx-auto text-sm md:text-base">
+                  Świętuj swoje wyjątkowe chwile w Naleśnikarni Spełnione Marzenie. Oferujemy przytulną atmosferę i pyszne jedzenie.
+                </p>
+                <div className="w-[100px] h-[1px] bg-accent-gold/40 mx-auto mb-6"></div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-4 bg-[#FAF8F4] rounded-xl border border-accent-terracotta/10">
+                    <span className="text-xs font-mono uppercase tracking-wider text-accent-terracotta font-bold block mb-1">Własne ciasto</span>
+                    <span className="font-sans text-xl font-bold text-accent-brown">5,00 zł / osoba</span>
+                    <p className="text-[11px] text-text-sub italic mt-1">(kaucja za talerzyk)</p>
+                  </div>
+                  <div className="p-4 bg-[#FAF8F4] rounded-xl border border-accent-terracotta/10">
+                    <span className="text-xs font-mono uppercase tracking-wider text-accent-terracotta font-bold block mb-1">Własny alkohol</span>
+                    <span className="font-sans text-xl font-bold text-accent-brown">10,00 zł / butelka</span>
+                    <p className="text-[11px] text-text-sub italic mt-1">(opłata korkowa)</p>
+                  </div>
+                </div>
+                <p className="text-xs text-text-sub/70 italic mt-8 font-mono">
+                  W celu rezerwacji terminów oraz ustalenia szczegółów prosimy o kontakt telefoniczny!
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Pod tabelą — sekcja napojów */}
-          <div className="mt-16 pt-10 border-t border-accent-terracotta/10 text-center max-w-2xl mx-auto fade-in-on-scroll opacity-0" id="drinks-section">
+          <div className="mt-16 pt-10 border-t border-accent-terracotta/10 text-center max-w-2xl mx-auto" id="drinks-section">
             <h4 className="font-cursive text-2xl md:text-[30px] text-accent-terracotta mb-8">
               A do tego...
             </h4>
             
             <div className="flex flex-row justify-center gap-6 sm:gap-10 flex-wrap">
-              <div className="flex flex-col items-center bg-warm-cream/40 px-5 py-4 rounded-xl border border-accent-terracotta/5 hover:border-accent-gold/40 hover:scale-105 transition-all duration-300 min-w-[100px]">
-                <span className="text-[38px] mb-2 filter drop-shadow">☕</span>
+              <div className="flex flex-col items-center bg-[#FAF8F4]/40 px-6 py-5 rounded-xl border border-accent-terracotta/5 hover:border-accent-gold/40 hover:scale-105 transition-all duration-300 min-w-[110px]">
+                <Coffee className="w-8 h-8 mb-3 text-accent-terracotta" />
                 <span className="font-sans text-[11px] font-bold uppercase tracking-[2px] text-text-sub">Kawa</span>
               </div>
-              <div className="flex flex-col items-center bg-warm-cream/40 px-5 py-4 rounded-xl border border-accent-terracotta/5 hover:border-accent-gold/40 hover:scale-105 transition-all duration-300 min-w-[100px]">
-                <span className="text-[38px] mb-2 filter drop-shadow">🍦</span>
+              <div className="flex flex-col items-center bg-[#FAF8F4]/40 px-6 py-5 rounded-xl border border-accent-terracotta/5 hover:border-accent-gold/40 hover:scale-105 transition-all duration-300 min-w-[110px]">
+                <IceCream className="w-8 h-8 mb-3 text-accent-terracotta" />
                 <span className="font-sans text-[11px] font-bold uppercase tracking-[2px] text-text-sub">Lody</span>
               </div>
-              <div className="flex flex-col items-center bg-warm-cream/40 px-5 py-4 rounded-xl border border-accent-terracotta/5 hover:border-accent-gold/40 hover:scale-105 transition-all duration-300 min-w-[110px]">
-                <span className="text-[38px] mb-2 filter drop-shadow">🥤</span>
+              <div className="flex flex-col items-center bg-[#FAF8F4]/40 px-6 py-5 rounded-xl border border-accent-terracotta/5 hover:border-accent-gold/40 hover:scale-105 transition-all duration-300 min-w-[110px]">
+                <GlassWater className="w-8 h-8 mb-3 text-accent-terracotta" />
                 <span className="font-sans text-[11px] font-bold uppercase tracking-[2px] text-text-sub">Napoje</span>
               </div>
-              <div className="flex flex-col items-center bg-warm-cream/40 px-5 py-4 rounded-xl border border-accent-terracotta/5 hover:border-accent-gold/40 hover:scale-105 transition-all duration-300 min-w-[100px]">
-                <span className="text-[38px] mb-2 filter drop-shadow">🧃</span>
+              <div className="flex flex-col items-center bg-[#FAF8F4]/40 px-6 py-5 rounded-xl border border-accent-terracotta/5 hover:border-accent-gold/40 hover:scale-105 transition-all duration-300 min-w-[110px]">
+                <Leaf className="w-8 h-8 mb-3 text-accent-terracotta" />
                 <span className="font-sans text-[11px] font-bold uppercase tracking-[2px] text-text-sub">Soki</span>
               </div>
             </div>
@@ -470,6 +761,157 @@ export default function App() {
           </div>
 
         </div>
+      </section>
+
+      {/* 6.5. SEKCJA GALERII — id="galeria" */}
+      <section 
+        id="galeria" 
+        className="py-24 bg-warm-cream relative border-b border-accent-terracotta/10"
+      >
+        <div className="max-w-[1140px] mx-auto px-6 md:px-8">
+          
+          {/* Nagłówek sekcji */}
+          <div className="text-center max-w-2xl mx-auto mb-16 fade-in-on-scroll opacity-0" id="gallery-header">
+            <span className="font-mono text-xs text-accent-terracotta tracking-[4px] uppercase block mb-2">
+              — nasza galeria —
+            </span>
+            <h2 className="font-serif text-3xl md:text-[48px] text-dark-choco font-bold">
+              Galeria Zdjęć
+            </h2>
+            <p className="font-sans text-base md:text-lg text-text-sub mt-4 font-light leading-relaxed">
+              Zobacz naszą przytulną naleśnikarnię, klimatyczne wnętrza oraz pyszne potrawy przygotowywane na miejscu.
+            </p>
+            <div className="w-[60px] h-1 bg-accent-terracotta mx-auto mt-6 rounded-full"></div>
+          </div>
+
+          {/* Masonry ze zdjęciami w oryginalnych proporcjach */}
+          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 md:gap-6" id="gallery-grid">
+            <AnimatePresence mode="popLayout">
+              {GALLERY_IMAGES.slice(0, visibleGalleryCount).map((image, index) => (
+                <motion.div 
+                  key={image.url}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                  transition={{ 
+                    duration: 0.5, 
+                    ease: [0.16, 1, 0.3, 1],
+                    delay: (index % 12) * 0.05
+                  }}
+                  onClick={() => openLightbox(index)}
+                  className="break-inside-avoid block relative overflow-hidden rounded-2xl bg-warm-apricot shadow-sm cursor-pointer hover:shadow-md transition-all duration-300 border border-accent-gold/15 hover:border-accent-gold/45 mb-4 md:mb-6 group"
+                >
+                  <img 
+                    src={image.url} 
+                    alt={image.title} 
+                    className="w-full h-auto rounded-2xl transition-transform duration-500 group-hover:scale-105"
+                    referrerPolicy="no-referrer"
+                  />
+                  
+                  {/* Overlay na hover bez podpisów zdjęć */}
+                  <div className="absolute inset-0 bg-dark-choco/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
+                    <div className="text-center transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                      <Search className="w-8 h-8 text-accent-gold mx-auto mb-2" />
+                      <span className="font-sans font-bold text-xs text-white uppercase tracking-widest">
+                        Powiększ
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* Guzik pokaż więcej / pokaż mniej */}
+          <div className="mt-12 text-center" id="gallery-controls">
+            {visibleGalleryCount < GALLERY_IMAGES.length ? (
+              <button
+                onClick={() => setVisibleGalleryCount(prev => Math.min(prev + 12, GALLERY_IMAGES.length))}
+                className="inline-flex items-center gap-2 bg-[#68826A] text-white font-sans text-[13px] font-bold uppercase tracking-[2px] px-8 py-4 rounded-full shadow-md hover:bg-[#C59B6D] hover:scale-105 active:scale-95 transition-all duration-300"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Pokaż więcej zdjęć</span>
+              </button>
+            ) : GALLERY_IMAGES.length > 12 && (
+              <button
+                onClick={() => setVisibleGalleryCount(12)}
+                className="inline-flex items-center gap-2 border-2 border-accent-terracotta text-accent-terracotta font-sans text-[13px] font-bold uppercase tracking-[2px] px-8 py-3.5 rounded-full hover:bg-accent-terracotta/10 hover:scale-105 active:scale-95 transition-all duration-300"
+              >
+                <span>Pokaż mniej</span>
+              </button>
+            )}
+          </div>
+
+        </div>
+
+        {/* Lightbox / Modal pełnoekranowy */}
+        {lightboxImageIndex !== null && (
+          <div 
+            className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in"
+            onClick={closeLightbox}
+          >
+            {/* Przycisk zamknięcia */}
+            <button 
+              onClick={closeLightbox}
+              className="absolute top-6 right-6 text-white/75 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 z-50"
+              aria-label="Zamknij"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {/* Kontener na zdjęcie i nawigację */}
+            <div 
+              className="relative max-w-5xl w-full max-h-[85vh] flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Przewijany kontener do przybliżenia */}
+              <div 
+                className={`w-full max-h-[72vh] flex items-center justify-center rounded-lg transition-all duration-300 ${
+                  isZoomed ? "overflow-auto no-scrollbar cursor-zoom-out" : "overflow-hidden cursor-zoom-in"
+                }`}
+                onClick={() => setIsZoomed(!isZoomed)}
+              >
+                <img 
+                  src={GALLERY_IMAGES[lightboxImageIndex].url} 
+                  alt={GALLERY_IMAGES[lightboxImageIndex].title}
+                  className={`rounded-lg shadow-2xl transition-all duration-300 origin-center ${
+                    isZoomed 
+                      ? "max-w-none max-h-none w-[150%] md:w-[180%] h-auto" 
+                      : "max-w-full max-h-[70vh] object-contain"
+                  }`}
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              
+              {/* Tytuł i wskazówki zoomu */}
+              <div className="mt-4 text-center select-none bg-black/50 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 max-w-md mx-auto">
+                <p className="font-mono text-[11px] text-white/60 uppercase tracking-widest leading-none flex items-center justify-center gap-1.5">
+                  <span>Zdjęcie {lightboxImageIndex + 1} z {GALLERY_IMAGES.length} • {isZoomed ? "Kliknij, aby oddalić" : "Kliknij, aby powiększyć"}</span>
+                  <Search className="w-3 h-3 text-accent-gold" />
+                </p>
+              </div>
+
+              {/* Strzałka w lewo */}
+              <button 
+                onClick={showPrevImage}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/75 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 z-10"
+                aria-label="Poprzednie zdjęcie"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+
+              {/* Strzałka w prawo */}
+              <button 
+                onClick={showNextImage}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/75 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 z-10"
+                aria-label="Następne zdjęcie"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* 7. SEKCJA WYRÓŻNIENIA — „DLACZEGO MY" */}
@@ -492,9 +934,7 @@ export default function App() {
             
             {/* Karta 1 */}
             <div className="bg-white/[0.03] border border-accent-gold/25 rounded-2xl p-8 sm:p-10 text-center transition-all duration-300 hover:border-accent-gold hover:bg-accent-gold/[0.08] hover:-translate-y-1" id="card-1">
-              <span className="text-5xl block mb-6 filter drop-shadow-md select-none">
-                🥞
-              </span>
+              <Utensils className="w-10 h-10 text-accent-gold mx-auto mb-6" />
               <h3 className="font-serif text-xl md:text-2xl text-accent-gold font-bold mb-4">
                 Naleśniki Francuskie
               </h3>
@@ -505,9 +945,7 @@ export default function App() {
 
             {/* Karta 2 */}
             <div className="bg-white/[0.03] border border-accent-gold/25 rounded-2xl p-8 sm:p-10 text-center transition-all duration-300 hover:border-accent-gold hover:bg-accent-gold/[0.08] hover:-translate-y-1" id="card-2">
-              <span className="text-5xl block mb-6 filter drop-shadow-md select-none">
-                ☕
-              </span>
+              <Coffee className="w-10 h-10 text-accent-gold mx-auto mb-6" />
               <h3 className="font-serif text-xl md:text-2xl text-accent-gold font-bold mb-4">
                 Aromatyczna Kawa
               </h3>
@@ -518,9 +956,7 @@ export default function App() {
 
             {/* Karta 3 */}
             <div className="bg-white/[0.03] border border-accent-gold/25 rounded-2xl p-8 sm:p-10 text-center transition-all duration-300 hover:border-accent-gold hover:bg-accent-gold/[0.08] hover:-translate-y-1" id="card-3">
-              <span className="text-5xl block mb-6 filter drop-shadow-md select-none">
-                📍
-              </span>
+              <MapPin className="w-10 h-10 text-accent-gold mx-auto mb-6" />
               <h3 className="font-serif text-xl md:text-2xl text-accent-gold font-bold mb-4">
                 Serce Kamienia Śląskiego
               </h3>
@@ -560,9 +996,7 @@ export default function App() {
               
               {/* Blok 1 - Adres */}
               <div className="contact-block py-6 border-b border-accent-terracotta/15 flex items-start gap-4">
-                <span className="text-[28px] text-accent-terracotta flex-shrink-0 mt-1 select-none">
-                  📍
-                </span>
+                <MapPin className="w-6 h-6 text-accent-terracotta flex-shrink-0 mt-1" />
                 <div>
                   <span className="font-mono text-[11px] uppercase tracking-[2px] text-text-sub block leading-none">
                     Adres
@@ -575,9 +1009,7 @@ export default function App() {
 
               {/* Blok 2 - Telefon */}
               <div className="contact-block py-6 border-b border-accent-terracotta/15 flex items-start gap-4">
-                <span className="text-[28px] text-accent-terracotta flex-shrink-0 mt-1 select-none">
-                  📞
-                </span>
+                <Phone className="w-6 h-6 text-accent-terracotta flex-shrink-0 mt-1" />
                 <div>
                   <span className="font-mono text-[11px] uppercase tracking-[2px] text-text-sub block leading-none">
                     Telefon
@@ -592,9 +1024,7 @@ export default function App() {
 
               {/* Blok 3 - E-mail */}
               <div className="contact-block py-6 border-b border-accent-terracotta/15 flex items-start gap-4">
-                <span className="text-[28px] text-accent-terracotta flex-shrink-0 mt-1 select-none">
-                  ✉️
-                </span>
+                <Mail className="w-6 h-6 text-accent-terracotta flex-shrink-0 mt-1" />
                 <div>
                   <span className="font-mono text-[11px] uppercase tracking-[2px] text-text-sub block leading-none">
                     E-mail
@@ -609,9 +1039,7 @@ export default function App() {
 
               {/* Blok 4 - Facebook */}
               <div className="contact-block py-6 flex items-start gap-4">
-                <span className="text-[28px] text-accent-terracotta flex-shrink-0 mt-1 select-none">
-                  📘
-                </span>
+                <Facebook className="w-6 h-6 text-accent-terracotta flex-shrink-0 mt-1" />
                 <div>
                   <span className="font-mono text-[11px] uppercase tracking-[2px] text-text-sub block leading-none">
                     Facebook
