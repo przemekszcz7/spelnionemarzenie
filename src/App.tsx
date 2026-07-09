@@ -1064,12 +1064,12 @@ export default function App() {
             <div className="lg:col-span-7 fade-in-on-scroll opacity-0" id="contact-map-col">
               <div className="relative pb-[65%] h-0 overflow-hidden rounded-2xl shadow-[0_8px_32px_rgba(35,43,36,0.12)] border-[3px] border-accent-terracotta/30 group">
                 <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2524.3857500330084!2d18.0694125!3d50.7127944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4711ad8fc0ebd9ab%3A0x868bbaa25eceb85b!2sul.%20Ligonia%202%2C%2047-325%20Kamie%C5%84%20Szl%C4%85ski!5e0!3m2!1spl!2spl!4v1719119200000!5m2!1spl!2spl"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2535.661584009329!2d18.071817912602018!3d50.54046568075927!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471101154d7b7e15%3A0x1398f37bafc21325!2sNalesnikarnia%20Spe%C5%82nione%20Marzenie%20-Bronislawa%20Sleziona!5e0!3m2!1spl!2spl!4v1783588861583!5m2!1spl!2spl"
                   className="absolute top-0 left-0 w-full h-full border-b duration-500 scale-100 group-hover:scale-[1.01]" 
                   style={{ border: 0 }}
                   allowFullScreen={true}
                   loading="lazy" 
-                  referrerPolicy="no-referrer"
+                  referrerPolicy="strict-origin-when-cross-origin"
                   title="Mapa Lokalizacyjna Naleśnikarni"
                 ></iframe>
               </div>
