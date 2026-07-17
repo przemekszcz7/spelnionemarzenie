@@ -30,7 +30,9 @@ import {
   Users,
   Briefcase,
   Star,
-  User
+  User,
+  ZoomIn,
+  Type
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
@@ -51,6 +53,8 @@ export default function App() {
   const [visibleGalleryCount, setVisibleGalleryCount] = useState(12);
   const [lightboxImageIndex, setLightboxImageIndex] = useState<number | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [selectedMenuItem, setSelectedMenuItem] = useState<any>(null);
+  const [isLargeTextMode, setIsLargeTextMode] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   
   // Menu horizontal scrolling controls
@@ -298,7 +302,7 @@ export default function App() {
         id="hero"
         className="relative min-h-screen flex items-center justify-center text-center px-6 overflow-hidden bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(35,43,36,0.3) 0%, rgba(35,43,36,0.45) 60%, rgba(35,43,36,0.7) 100%), url('https://i.ibb.co/ZRWcq6QD/649102734-26219964550948472-204026828541114034-n.jpg')`
+          backgroundImage: `linear-gradient(to bottom, rgba(35,43,36,0.3) 0%, rgba(35,43,36,0.45) 60%, rgba(35,43,36,0.7) 100%), url('https://i.ibb.co/mrTSTj82/color-edited-image-1.jpg')`
         }}
       >
         <div className="max-w-4xl mx-auto flex flex-col items-center pt-20">
@@ -418,10 +422,10 @@ export default function App() {
               
               <div className="space-y-6 text-[15px] md:text-[17px] text-text-sub font-light leading-relaxed">
                 <p>
-                  Naleśnikarnia <strong>Spełnione Marzenie</strong> to wyjątkowe miejsce w samym sercu Kamienia Śląskiego, gdzie każdy naleśnik przygotowywany jest z prawdziwą pasją i najlepszych, dokładnie wyselekcjonowanych składników.
+                  Są marzenia, które czekają na swój moment. Moje dojrzewało przez wiele lat. Dziś stało się rzeczywistością.
                 </p>
                 <p>
-                  Nasze cienkie naleśniki w stylu francuskim możesz zamówić na słodko lub wytrawnie — dobieramy nadzienie tak, by dogodzić każdemu podniebieniu. Każdej potrawie towarzyszy u nas aromatyczna, świeżo parzona kawa, pyszne lody i chłodne, orzeźwiające napoje w sam raz na miły odpoczynek.
+                  <strong>Spełnione Marzenie</strong> to miejsce stworzone z serca – z myślą o ludziach, którzy chcą na chwilę zwolnić, dobrze zjeść i spędzić czas w wyjątkowej atmosferze.
                 </p>
               </div>
 
@@ -505,6 +509,29 @@ export default function App() {
             <div className="w-[60px] h-1 bg-accent-terracotta mx-auto mt-6 rounded-full"></div>
           </div>
 
+          {/* Opcje dostępności / powiększenia */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 bg-white/40 backdrop-blur-sm px-6 py-4 rounded-2xl border border-accent-gold/20 max-w-xl mx-auto text-center sm:text-left shadow-sm" id="menu-accessibility-bar">
+            <div className="flex items-center gap-2.5">
+              <span className="p-1.5 bg-accent-terracotta/10 rounded-lg text-accent-terracotta shrink-0">
+                <ZoomIn className="w-4 h-4" />
+              </span>
+              <p className="font-sans text-xs md:text-sm text-accent-brown font-medium">
+                💡 Kliknij dowolną pozycję, aby ją powiększyć!
+              </p>
+            </div>
+            <button
+              onClick={() => setIsLargeTextMode(!isLargeTextMode)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer shrink-0 ${
+                isLargeTextMode
+                  ? "bg-accent-terracotta text-white shadow-sm scale-105"
+                  : "bg-[#FAF8F4]/80 border border-accent-gold/30 text-accent-brown hover:bg-accent-gold/15 hover:border-accent-terracotta/40"
+              }`}
+            >
+              <Type className="w-4 h-4" />
+              <span>{isLargeTextMode ? "Zwykły tekst" : "Duży tekst"}</span>
+            </button>
+          </div>
+
           {/* Kategorie menu w postaci eleganckich zakładek z przyciskami przewijania */}
           <div className="relative w-full mb-12 group/tabs" id="menu-tabs-container">
             {/* Przycisk lewo */}
@@ -576,15 +603,28 @@ export default function App() {
           <div className="min-h-[300px]" id="menu-tabs-content">
             {activeMenuTab === "sweet" && (
               <div className="animate-fade-in-up">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                   {SWEET_PANCAKES.map((item) => (
-                    <div key={item.id} className="flex items-baseline justify-between py-3 border-b border-accent-terracotta/10 hover:bg-white/20 px-3 rounded-lg transition-colors">
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-[11px] text-accent-terracotta bg-accent-terracotta/10 px-2 py-0.5 rounded font-bold">{item.id}</span>
-                        <span className="font-sans font-bold text-[14px] md:text-[15px] text-dark-choco uppercase tracking-wide leading-tight">{item.name}</span>
+                    <div 
+                      key={item.id} 
+                      onClick={() => setSelectedMenuItem({ ...item, category: "Naleśnik Słodki" })}
+                      className={`flex items-baseline justify-between border-b border-accent-terracotta/10 hover:bg-white/30 px-3 rounded-lg transition-all cursor-pointer group/item ${
+                        isLargeTextMode ? "py-4 md:py-5" : "py-2.5"
+                      }`}
+                      title="Kliknij, aby powiększyć"
+                    >
+                      <div className="flex items-start gap-3 min-w-0 flex-1 pt-0.5">
+                        <span className={`font-mono text-accent-terracotta bg-accent-terracotta/10 rounded font-bold transition-all shrink-0 flex items-center justify-center ${
+                          isLargeTextMode ? "text-[13px] md:text-[14px] px-2.5 py-1" : "text-[11px] px-2 py-0.5"
+                        }`}>{item.id}</span>
+                        <span className={`font-sans font-bold text-dark-choco uppercase tracking-wide leading-tight transition-all group-hover/item:text-accent-terracotta ${
+                          isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                        }`}>{item.name}</span>
                       </div>
                       <div className="flex-grow mx-3 border-b border-dashed border-accent-gold/40"></div>
-                      <span className="font-sans font-bold text-[14px] md:text-[15px] text-accent-brown whitespace-nowrap">{item.price}</span>
+                      <span className={`font-sans font-bold text-accent-brown whitespace-nowrap transition-all shrink-0 ${
+                        isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                      }`}>{item.price}</span>
                     </div>
                   ))}
                 </div>
@@ -599,15 +639,28 @@ export default function App() {
 
             {activeMenuTab === "savory" && (
               <div className="animate-fade-in-up">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                   {SAVORY_PANCAKES.map((item) => (
-                    <div key={item.id} className="flex items-baseline justify-between py-3 border-b border-accent-terracotta/10 hover:bg-white/20 px-3 rounded-lg transition-colors">
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-[11px] text-accent-terracotta bg-accent-terracotta/10 px-2 py-0.5 rounded font-bold">{item.id}</span>
-                        <span className="font-sans font-bold text-[14px] md:text-[15px] text-dark-choco uppercase tracking-wide leading-tight">{item.name}</span>
+                    <div 
+                      key={item.id} 
+                      onClick={() => setSelectedMenuItem({ ...item, category: "Naleśnik Wytrawny" })}
+                      className={`flex items-baseline justify-between border-b border-accent-terracotta/10 hover:bg-white/30 px-3 rounded-lg transition-all cursor-pointer group/item ${
+                        isLargeTextMode ? "py-4 md:py-5" : "py-2.5"
+                      }`}
+                      title="Kliknij, aby powiększyć"
+                    >
+                      <div className="flex items-start gap-3 min-w-0 flex-1 pt-0.5">
+                        <span className={`font-mono text-accent-terracotta bg-accent-terracotta/10 rounded font-bold transition-all shrink-0 flex items-center justify-center ${
+                          isLargeTextMode ? "text-[13px] md:text-[14px] px-2.5 py-1" : "text-[11px] px-2 py-0.5"
+                        }`}>{item.id}</span>
+                        <span className={`font-sans font-bold text-dark-choco uppercase tracking-wide leading-tight transition-all group-hover/item:text-accent-terracotta ${
+                          isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                        }`}>{item.name}</span>
                       </div>
                       <div className="flex-grow mx-3 border-b border-dashed border-accent-gold/40"></div>
-                      <span className="font-sans font-bold text-[14px] md:text-[15px] text-accent-brown whitespace-nowrap">{item.price}</span>
+                      <span className={`font-sans font-bold text-accent-brown whitespace-nowrap transition-all shrink-0 ${
+                        isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                      }`}>{item.price}</span>
                     </div>
                   ))}
                 </div>
@@ -623,16 +676,29 @@ export default function App() {
             {activeMenuTab === "novelties" && (
               <div className="animate-fade-in-up max-w-3xl mx-auto space-y-6">
                 {NOVELTIES.map((item, index) => (
-                  <div key={index} className="bg-white/50 p-6 rounded-2xl border border-accent-gold/20 shadow-sm hover:border-accent-gold/50 transition-all hover:scale-[1.01]">
+                  <div 
+                    key={index} 
+                    onClick={() => setSelectedMenuItem({ ...item, category: "Nowość" })}
+                    className={`bg-white/50 rounded-2xl border border-accent-gold/20 shadow-sm hover:border-accent-gold/50 hover:bg-white/80 transition-all hover:scale-[1.01] cursor-pointer group/item ${
+                      isLargeTextMode ? "p-8" : "p-6"
+                    }`}
+                    title="Kliknij, aby powiększyć"
+                  >
                     <div className="flex items-baseline justify-between gap-4">
-                      <div className="flex items-center gap-2">
-                        <span className="inline-block bg-accent-gold/20 text-accent-brown font-mono text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded">Nowość!</span>
-                        <h4 className="font-serif text-lg md:text-xl font-bold text-dark-choco">{item.name}</h4>
+                      <div className="flex items-start gap-2 min-w-0 flex-1 pt-0.5">
+                        <span className="inline-block bg-accent-gold/20 text-accent-brown font-mono text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shrink-0">Nowość!</span>
+                        <h4 className={`font-serif font-bold text-dark-choco transition-all group-hover/item:text-accent-terracotta ${
+                          isLargeTextMode ? "text-xl md:text-2xl" : "text-base md:text-lg"
+                        }`}>{item.name}</h4>
                       </div>
-                      <div className="flex-grow border-b border-dashed border-accent-gold/40"></div>
-                      <span className="font-sans font-bold text-lg text-accent-brown">{item.price}</span>
+                      <div className="flex-grow border-b border-dashed border-accent-gold/40 mx-2"></div>
+                      <span className={`font-sans font-bold text-accent-brown transition-all shrink-0 ${
+                        isLargeTextMode ? "text-xl md:text-2xl" : "text-base md:text-lg"
+                      }`}>{item.price}</span>
                     </div>
-                    <p className="font-sans text-sm text-text-sub mt-2 italic font-light">
+                    <p className={`font-sans text-text-sub mt-2 italic font-light transition-all ${
+                      isLargeTextMode ? "text-sm md:text-base" : "text-xs md:text-sm"
+                    }`}>
                       {item.desc}
                     </p>
                   </div>
@@ -644,10 +710,21 @@ export default function App() {
               <div className="animate-fade-in-up max-w-3xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                   {HOT_DRINKS.map((item, index) => (
-                    <div key={index} className="flex items-baseline justify-between py-2 border-b border-accent-terracotta/10 hover:bg-white/10 px-3 rounded-lg transition-colors">
-                      <span className="font-sans font-bold text-[14px] md:text-[15px] text-dark-choco uppercase tracking-wide">{item.name}</span>
+                    <div 
+                      key={index} 
+                      onClick={() => setSelectedMenuItem({ ...item, category: "Napój Gorący" })}
+                      className={`flex items-baseline justify-between border-b border-accent-terracotta/10 hover:bg-white/20 px-3 rounded-lg transition-all cursor-pointer group/item ${
+                        isLargeTextMode ? "py-4 md:py-5" : "py-2.5"
+                      }`}
+                      title="Kliknij, aby powiększyć"
+                    >
+                      <span className={`font-sans font-bold text-dark-choco uppercase tracking-wide transition-all group-hover/item:text-accent-terracotta flex-1 pr-2 ${
+                        isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                      }`}>{item.name}</span>
                       <div className="flex-grow mx-3 border-b border-dashed border-accent-gold/40"></div>
-                      <span className="font-sans font-bold text-[14px] md:text-[15px] text-accent-brown">{item.price}</span>
+                      <span className={`font-sans font-bold text-accent-brown transition-all shrink-0 ${
+                        isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                      }`}>{item.price}</span>
                     </div>
                   ))}
                 </div>
@@ -657,57 +734,102 @@ export default function App() {
             {activeMenuTab === "drinks" && (
               <div className="animate-fade-in-up grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Zimne Napoje */}
-                <div className="bg-[#FAF8F4]/40 p-6 rounded-2xl border border-accent-terracotta/5">
+                <div className="bg-[#FAF8F4]/40 p-6 rounded-2xl border border-accent-gold/15">
                   <h4 className="font-serif text-lg font-bold text-accent-terracotta border-b-2 border-accent-terracotta/15 pb-2 mb-4 uppercase tracking-wider text-center flex items-center justify-center gap-2">
                     <GlassWater className="w-5 h-5" />
                     <span>Napoje Zimne</span>
                   </h4>
                   <div className="space-y-4">
                     {COLD_DRINKS.map((item, index) => (
-                      <div key={index} className="flex flex-col border-b border-accent-terracotta/5 pb-2">
-                        <div className="flex items-baseline justify-between">
-                          <span className="font-sans font-bold text-sm text-dark-choco uppercase tracking-wide">{item.name}</span>
-                          <span className="font-sans font-bold text-sm text-accent-brown">{item.price}</span>
+                      <div 
+                        key={index} 
+                        onClick={() => setSelectedMenuItem({ ...item, category: "Napój Zimny" })}
+                        className={`flex flex-col border-b border-accent-terracotta/5 hover:bg-white/20 px-2.5 py-2 rounded-xl cursor-pointer group/item transition-all ${
+                          isLargeTextMode ? "gap-2" : "gap-1"
+                        }`}
+                        title="Kliknij, aby powiększyć"
+                      >
+                        <div className="flex items-baseline justify-between gap-2">
+                          <span className={`font-sans font-bold text-dark-choco uppercase tracking-wide transition-all group-hover/item:text-accent-terracotta flex-1 pr-2 ${
+                            isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                          }`}>{item.name}</span>
+                          <span className={`font-sans font-bold text-accent-brown transition-all shrink-0 ${
+                            isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                          }`}>{item.price}</span>
                         </div>
-                        {item.desc && <span className="text-xs text-text-sub italic">{item.desc}</span>}
+                        {item.desc && (
+                          <span className={`text-text-sub italic transition-all ${
+                            isLargeTextMode ? "text-[14px] md:text-[15px]" : "text-[12px] md:text-[13px]"
+                          }`}>{item.desc}</span>
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Piwa */}
-                <div className="bg-[#FAF8F4]/40 p-6 rounded-2xl border border-accent-terracotta/5">
+                <div className="bg-[#FAF8F4]/40 p-6 rounded-2xl border border-accent-gold/15">
                   <h4 className="font-serif text-lg font-bold text-accent-terracotta border-b-2 border-accent-terracotta/15 pb-2 mb-4 uppercase tracking-wider text-center flex items-center justify-center gap-2">
                     <Beer className="w-5 h-5" />
                     <span>Piwa</span>
                   </h4>
                   <div className="space-y-4">
                     {BEERS.map((item, index) => (
-                      <div key={index} className="flex flex-col border-b border-accent-terracotta/5 pb-2">
-                        <div className="flex items-baseline justify-between gap-1">
-                          <span className="font-sans font-bold text-sm text-dark-choco uppercase tracking-wide leading-tight">{item.name}</span>
-                          <span className="font-sans font-bold text-sm text-accent-brown whitespace-nowrap">{item.price}</span>
+                      <div 
+                        key={index} 
+                        onClick={() => setSelectedMenuItem({ ...item, category: "Piwo" })}
+                        className={`flex flex-col border-b border-accent-terracotta/5 hover:bg-white/20 px-2.5 py-2 rounded-xl cursor-pointer group/item transition-all ${
+                          isLargeTextMode ? "gap-2" : "gap-1"
+                        }`}
+                        title="Kliknij, aby powiększyć"
+                      >
+                        <div className="flex items-baseline justify-between gap-2">
+                          <span className={`font-sans font-bold text-dark-choco uppercase tracking-wide transition-all group-hover/item:text-accent-terracotta flex-1 pr-2 ${
+                            isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                          }`}>{item.name}</span>
+                          <span className={`font-sans font-bold text-accent-brown transition-all shrink-0 ${
+                            isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                          }`}>{item.price}</span>
                         </div>
-                        {item.desc && <span className="text-xs text-text-sub italic">{item.desc}</span>}
+                        {item.desc && (
+                          <span className={`text-text-sub italic transition-all ${
+                            isLargeTextMode ? "text-[14px] md:text-[15px]" : "text-[12px] md:text-[13px]"
+                          }`}>{item.desc}</span>
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Drink & Shots */}
-                <div className="bg-[#FAF8F4]/40 p-6 rounded-2xl border border-accent-terracotta/5">
+                <div className="bg-[#FAF8F4]/40 p-6 rounded-2xl border border-accent-gold/15">
                   <h4 className="font-serif text-lg font-bold text-accent-terracotta border-b-2 border-accent-terracotta/15 pb-2 mb-4 uppercase tracking-wider text-center flex items-center justify-center gap-2">
                     <Wine className="w-5 h-5" />
                     <span>Drink & Shots</span>
                   </h4>
                   <div className="space-y-4">
                     {DRINKS_AND_SHOTS.map((item, index) => (
-                      <div key={index} className="flex flex-col border-b border-accent-terracotta/5 pb-2">
-                        <div className="flex items-baseline justify-between gap-1">
-                          <span className="font-sans font-bold text-sm text-dark-choco uppercase tracking-wide leading-tight">{item.name}</span>
-                          <span className="font-sans font-bold text-sm text-accent-brown whitespace-nowrap">{item.price}</span>
+                      <div 
+                        key={index} 
+                        onClick={() => setSelectedMenuItem({ ...item, category: "Drink & Shots" })}
+                        className={`flex flex-col border-b border-accent-terracotta/5 hover:bg-white/20 px-2.5 py-2 rounded-xl cursor-pointer group/item transition-all ${
+                          isLargeTextMode ? "gap-2" : "gap-1"
+                        }`}
+                        title="Kliknij, aby powiększyć"
+                      >
+                        <div className="flex items-baseline justify-between gap-2">
+                          <span className={`font-sans font-bold text-dark-choco uppercase tracking-wide transition-all group-hover/item:text-accent-terracotta flex-1 pr-2 ${
+                            isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                          }`}>{item.name}</span>
+                          <span className={`font-sans font-bold text-accent-brown transition-all shrink-0 ${
+                            isLargeTextMode ? "text-[17px] md:text-[19px]" : "text-[14px] md:text-[15px]"
+                          }`}>{item.price}</span>
                         </div>
-                        {item.desc && <span className="text-xs text-text-sub italic">{item.desc}</span>}
+                        {item.desc && (
+                          <span className={`text-text-sub italic transition-all ${
+                            isLargeTextMode ? "text-[14px] md:text-[15px]" : "text-[12px] md:text-[13px]"
+                          }`}>{item.desc}</span>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -1353,6 +1475,89 @@ export default function App() {
 
         </div>
       </footer>
+
+      {/* MODAL POWIĘKSZENIA POZYCJI MENU */}
+      <AnimatePresence>
+        {selectedMenuItem && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedMenuItem(null)}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 md:p-6 cursor-pointer"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#FAF8F4] border-[3px] border-accent-gold max-w-xl w-full rounded-3xl p-8 md:p-12 shadow-[0_24px_64px_rgba(0,0,0,0.3)] relative text-center cursor-default"
+            >
+              {/* Przycisk zamknięcia */}
+              <button
+                onClick={() => setSelectedMenuItem(null)}
+                className="absolute top-4 right-4 text-accent-brown/75 hover:text-accent-terracotta bg-accent-terracotta/10 hover:bg-accent-terracotta/20 p-2.5 rounded-full transition-all cursor-pointer"
+                aria-label="Zamknij"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Kategoria i ikona */}
+              <div className="flex flex-col items-center mb-6">
+                <span className="font-mono text-xs text-accent-terracotta tracking-[3px] uppercase block mb-3">
+                  — {selectedMenuItem.category || "Menu"} —
+                </span>
+                <div className="w-16 h-16 rounded-full bg-accent-terracotta/10 flex items-center justify-center text-accent-terracotta mb-4">
+                  {selectedMenuItem.id ? (
+                    <span className="font-mono text-xl font-bold">{selectedMenuItem.id}</span>
+                  ) : (
+                    <Utensils className="w-8 h-8" />
+                  )}
+                </div>
+              </div>
+
+              {/* Tytuł i Nazwa (BARDZO DUŻA) */}
+              <h3 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-dark-choco uppercase tracking-wide leading-tight mb-4 select-text">
+                {selectedMenuItem.name}
+              </h3>
+
+              {/* Linia ozdobna */}
+              <div className="w-[80px] h-[2px] bg-accent-gold/50 mx-auto mb-6"></div>
+
+              {/* Opis jeśli istnieje */}
+              {selectedMenuItem.desc && (
+                <p className="font-sans text-sm md:text-base text-text-sub italic font-light mb-6 bg-white/40 p-4 rounded-xl border border-accent-gold/10 select-text">
+                  {selectedMenuItem.desc}
+                </p>
+              )}
+
+              {/* Cena (OGROMNA) */}
+              <div className="inline-block bg-accent-terracotta/10 border border-accent-terracotta/20 px-8 py-4 rounded-2xl">
+                <span className="font-mono text-xs uppercase tracking-widest text-accent-terracotta block mb-1">Cena</span>
+                <span className="font-sans font-black text-3xl md:text-4xl text-accent-brown select-text">
+                  {selectedMenuItem.price}
+                </span>
+              </div>
+
+              {/* Informacja o sosach/dodatkach jeśli to naleśnik */}
+              {selectedMenuItem.category && selectedMenuItem.category.includes("Naleśnik") && (
+                <p className="font-sans text-xs text-text-sub/75 mt-6 italic">
+                  Zapytaj obsługę o dodatki lub pyszne domowe sosy!
+                </p>
+              )}
+
+              {/* Przycisk Zamknij pod spodem */}
+              <button
+                onClick={() => setSelectedMenuItem(null)}
+                className="mt-8 w-full py-3.5 bg-accent-terracotta hover:bg-accent-brown text-white font-sans text-sm font-bold uppercase tracking-wider rounded-xl shadow-md transition-all cursor-pointer"
+              >
+                Powrót do menu
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
