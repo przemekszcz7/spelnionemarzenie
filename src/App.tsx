@@ -302,7 +302,7 @@ export default function App() {
         id="hero"
         className="relative min-h-screen flex items-center justify-center text-center px-6 overflow-hidden bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(35,43,36,0.3) 0%, rgba(35,43,36,0.45) 60%, rgba(35,43,36,0.7) 100%), url('https://i.ibb.co/mrTSTj82/color-edited-image-1.jpg')`
+          backgroundImage: `url('https://i.ibb.co/mrTSTj82/color-edited-image-1.jpg')`
         }}
       >
         {/* Transparentny naleśnik (crepe cutout) - umieszczony z boku headera */}
@@ -353,8 +353,11 @@ export default function App() {
           {/* Podtytuł */}
           <p 
             id="hero-sub"
-            className="font-sans text-lg md:text-2xl text-accent-wheat font-light tracking-[1px] max-w-2xl px-4 animate-fade-in-up drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]"
-            style={{ animationDelay: "0.4s" }}
+            className="font-sans text-lg md:text-2xl text-accent-wheat font-light tracking-[1px] max-w-2xl px-4 animate-fade-in-up"
+            style={{ 
+              animationDelay: "0.4s",
+              textShadow: "0 2px 12px rgba(0, 0, 0, 0.95), 0 1px 3px rgba(0, 0, 0, 0.9)"
+            }}
           >
             Pyszne naleśniki francuskie na słodko i wytrawnie
           </p>
@@ -362,8 +365,11 @@ export default function App() {
           {/* Opis */}
           <p 
             id="hero-desc"
-            className="font-mono text-xs md:text-sm text-accent-wheat/80 tracking-[4px] mt-3 uppercase animate-fade-in-up drop-shadow-[0_2px_3px_rgba(0,0,0,0.85)]"
-            style={{ animationDelay: "0.5s" }}
+            className="font-mono text-xs md:text-sm text-accent-wheat/80 tracking-[4px] mt-3 uppercase animate-fade-in-up"
+            style={{ 
+              animationDelay: "0.5s",
+              textShadow: "0 2px 10px rgba(0, 0, 0, 0.95), 0 1px 2px rgba(0, 0, 0, 0.9)"
+            }}
           >
             Kawa · Lody · Zimne napoje
           </p>
