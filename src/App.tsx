@@ -305,7 +305,20 @@ export default function App() {
           backgroundImage: `linear-gradient(to bottom, rgba(35,43,36,0.3) 0%, rgba(35,43,36,0.45) 60%, rgba(35,43,36,0.7) 100%), url('https://i.ibb.co/mrTSTj82/color-edited-image-1.jpg')`
         }}
       >
-        <div className="max-w-4xl mx-auto flex flex-col items-center pt-20">
+        {/* Transparentny naleśnik (crepe cutout) - umieszczony z boku headera */}
+        <div 
+          className="absolute -right-12 sm:right-[5%] md:right-[8%] lg:right-[12%] top-[12%] sm:top-[20%] md:top-[25%] w-36 h-36 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 animate-fade-in-up select-none pointer-events-none drop-shadow-[0_20px_45px_rgba(0,0,0,0.75)] z-10 opacity-80 sm:opacity-95"
+          style={{ animationDelay: "0.05s" }}
+        >
+          <img 
+            src="https://i.ibb.co/VrX0jyK/567717619-122104393821059314-2705947514695363768-n-Photoroom.png" 
+            alt="Naleśnik" 
+            className="w-full h-full object-contain animate-float rotate-12"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+
+        <div className="max-w-4xl mx-auto flex flex-col items-center pt-24 pb-28 sm:pb-16 relative z-20">
           
           {/* Dekoracyjna etykieta */}
           <p 
@@ -333,7 +346,7 @@ export default function App() {
           {/* Cienka dekoracyjna linia */}
           <div 
             id="hero-divider"
-            className="w-20 h-[3px] bg-accent-terracotta my-7 rounded-full animate-fade-in-up shadow-sm"
+            className="w-20 h-[3px] bg-accent-terracotta my-5 sm:my-7 rounded-full animate-fade-in-up shadow-sm"
             style={{ animationDelay: "0.3s" }}
           ></div>
 
@@ -358,7 +371,7 @@ export default function App() {
           {/* Dwa przyciski */}
           <div 
             id="hero-buttons"
-            className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-10 w-full sm:w-auto px-6 sm:px-0 animate-fade-in-up"
+            className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-8 sm:mt-10 w-full sm:w-auto px-6 sm:px-0 animate-fade-in-up"
             style={{ animationDelay: "0.6s" }}
           >
             <a 
@@ -381,7 +394,7 @@ export default function App() {
         <a 
           id="hero-arrow"
           href="#promo-banner" 
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-accent-gold select-none hover:text-[#FFF8EE] transition-colors"
+          className="absolute bottom-6 sm:bottom-10 left-1/2 transform -translate-x-1/2 text-accent-gold select-none hover:text-[#FFF8EE] transition-colors"
           aria-label="Scroll down"
         >
           <div className="animate-bounce text-accent-gold p-2 bg-black/20 backdrop-blur-sm rounded-full border border-white/10">
