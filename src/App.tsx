@@ -26,7 +26,11 @@ import {
   Phone,
   Mail,
   Facebook,
-  Search
+  Search,
+  Users,
+  Briefcase,
+  Star,
+  User
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
@@ -216,6 +220,9 @@ export default function App() {
             <a href="#menu" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
               Menu
             </a>
+            <a href="#imprezy" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
+              Imprezy
+            </a>
             <a href="#galeria" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
               Galeria
             </a>
@@ -260,6 +267,13 @@ export default function App() {
               className="font-sans text-lg font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors"
             >
               Menu
+            </a>
+            <a 
+              href="#imprezy" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="font-sans text-lg font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors"
+            >
+              Imprezy
             </a>
             <a 
               href="#galeria" 
@@ -520,8 +534,7 @@ export default function App() {
                   { id: "savory", label: "Naleśniki Wytrawne", icon: Utensils },
                   { id: "novelties", label: "Nowości", icon: Sparkles },
                   { id: "hot", label: "Napoje Gorące", icon: Coffee },
-                  { id: "drinks", label: "Napoje, Piwa & Drinki", icon: Wine },
-                  { id: "info", label: "Urodziny & Imprezy", icon: PartyPopper }
+                  { id: "drinks", label: "Napoje, Piwa & Drinki", icon: Wine }
                 ].map((tab) => {
                   const IconComponent = tab.icon;
                   return (
@@ -701,32 +714,6 @@ export default function App() {
                 </div>
               </div>
             )}
-
-            {activeMenuTab === "info" && (
-              <div className="animate-fade-in-up max-w-2xl mx-auto bg-white/50 p-8 rounded-3xl border border-accent-gold/30 shadow-md text-center">
-                <PartyPopper className="w-12 h-12 text-accent-gold mx-auto mb-4" />
-                <h4 className="font-serif text-2xl font-bold text-dark-choco mb-2">Organizujemy imprezy urodzinowe!</h4>
-                <p className="font-sans text-text-sub font-light mb-6 max-w-md mx-auto text-sm md:text-base">
-                  Świętuj swoje wyjątkowe chwile w Naleśnikarni Spełnione Marzenie. Oferujemy przytulną atmosferę i pyszne jedzenie.
-                </p>
-                <div className="w-[100px] h-[1px] bg-accent-gold/40 mx-auto mb-6"></div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 bg-[#FAF8F4] rounded-xl border border-accent-terracotta/10">
-                    <span className="text-xs font-mono uppercase tracking-wider text-accent-terracotta font-bold block mb-1">Własne ciasto</span>
-                    <span className="font-sans text-xl font-bold text-accent-brown">5,00 zł / osoba</span>
-                    <p className="text-[11px] text-text-sub italic mt-1">(kaucja za talerzyk)</p>
-                  </div>
-                  <div className="p-4 bg-[#FAF8F4] rounded-xl border border-accent-terracotta/10">
-                    <span className="text-xs font-mono uppercase tracking-wider text-accent-terracotta font-bold block mb-1">Własny alkohol</span>
-                    <span className="font-sans text-xl font-bold text-accent-brown">10,00 zł / butelka</span>
-                    <p className="text-[11px] text-text-sub italic mt-1">(opłata korkowa)</p>
-                  </div>
-                </div>
-                <p className="text-xs text-text-sub/70 italic mt-8 font-mono">
-                  W celu rezerwacji terminów oraz ustalenia szczegółów prosimy o kontakt telefoniczny!
-                </p>
-              </div>
-            )}
           </div>
 
           {/* Pod tabelą — sekcja napojów */}
@@ -758,6 +745,96 @@ export default function App() {
             <p className="font-mono text-xs text-text-sub/70 italic mt-12 block">
               Menu może ulec zmianie. Pytaj o aktualne propozycje dnia!
             </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 6. SEKCJA IMPREZY & WYDARZENIA — id="imprezy" */}
+      <section 
+        id="imprezy" 
+        className="py-24 bg-warm-cream relative z-10 border-b border-accent-terracotta/10"
+      >
+        <div className="max-w-[1140px] mx-auto px-6 md:px-8">
+          
+          {/* Nagłówek sekcji */}
+          <div className="text-center max-w-2xl mx-auto mb-16 fade-in-on-scroll opacity-0" id="events-header">
+            <span className="font-mono text-xs text-accent-terracotta tracking-[4px] uppercase block mb-2">
+              — oferta okolicznościowa —
+            </span>
+            <h2 className="font-serif text-3xl md:text-[48px] text-dark-choco font-bold leading-tight">
+              Urodziny, Imprezy & Warsztaty
+            </h2>
+            <p className="font-sans text-base md:text-lg text-text-sub mt-4 font-light leading-relaxed">
+              Naleśnikarnia Spełnione Marzenie to idealne miejsce na Twoje wydarzenie. Nasza przytulna atmosfera, profesjonalne podejście i pyszne menu sprawią, że każda chwila będzie wyjątkowa.
+            </p>
+            <div className="w-[60px] h-1 bg-accent-terracotta mx-auto mt-6 rounded-full"></div>
+          </div>
+
+          <div className="max-w-4xl mx-auto bg-white/60 backdrop-blur-sm p-8 md:p-12 rounded-3xl border border-accent-gold/30 shadow-sm fade-in-on-scroll opacity-0" id="events-card">
+            {/* 3 główne rodzaje wydarzeń */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              {/* Imprezy */}
+              <div className="bg-[#FAF8F4]/90 p-6 rounded-2xl border border-accent-gold/15 text-center flex flex-col items-center hover:shadow-md hover:border-accent-terracotta/35 transition-all duration-300">
+                <div className="w-12 h-12 rounded-full bg-accent-terracotta/10 flex items-center justify-center text-accent-terracotta mb-4">
+                  <Cake className="w-6 h-6" />
+                </div>
+                <h3 className="font-serif text-lg font-bold text-dark-choco mb-2">Imprezy Okolicznościowe</h3>
+                <p className="font-sans text-xs text-text-sub leading-relaxed">
+                  Urodziny, rocznice, jubileusze, chrzciny oraz spotkania rodzinne i towarzyskie w ciepłym, kameralnym gronie.
+                </p>
+              </div>
+
+              {/* Warsztaty */}
+              <div className="bg-[#FAF8F4]/90 p-6 rounded-2xl border border-accent-gold/15 text-center flex flex-col items-center hover:shadow-md hover:border-accent-terracotta/35 transition-all duration-300">
+                <div className="w-12 h-12 rounded-full bg-accent-terracotta/10 flex items-center justify-center text-accent-terracotta mb-4">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <h3 className="font-serif text-lg font-bold text-dark-choco mb-2">Kreatywne Warsztaty</h3>
+                <p className="font-sans text-xs text-text-sub leading-relaxed">
+                  Zorganizuj warsztaty kulinarne, artystyczne lub tematyczne spotkania dla dzieci i dorosłych w inspirującym otoczeniu.
+                </p>
+              </div>
+
+              {/* Spotkania biznesowe */}
+              <div className="bg-[#FAF8F4]/90 p-6 rounded-2xl border border-accent-gold/15 text-center flex flex-col items-center hover:shadow-md hover:border-accent-terracotta/35 transition-all duration-300">
+                <div className="w-12 h-12 rounded-full bg-accent-terracotta/10 flex items-center justify-center text-accent-terracotta mb-4">
+                  <Briefcase className="w-6 h-6" />
+                </div>
+                <h3 className="font-serif text-lg font-bold text-dark-choco mb-2">Spotkania Biznesowe</h3>
+                <p className="font-sans text-xs text-text-sub leading-relaxed">
+                  Kameralne spotkania firmowe, rekrutacje, prezentacje, szkolenia i narady biznesowe przy doskonałej, aromatycznej kawie.
+                </p>
+              </div>
+            </div>
+
+            <div className="w-[150px] h-[1px] bg-accent-gold/30 mx-auto mb-10"></div>
+
+            {/* Warunki / Informacje dodatkowe */}
+            <div className="max-w-2xl mx-auto">
+              <h4 className="font-sans text-xs font-bold uppercase tracking-[2px] text-accent-terracotta text-center mb-6">Informacje dodatkowe i opłaty</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-4 bg-[#FAF8F4]/90 rounded-xl border border-accent-terracotta/10 text-center">
+                  <span className="text-xs font-mono uppercase tracking-wider text-accent-terracotta font-bold block mb-1">Własne ciasto / tort</span>
+                  <span className="font-sans text-lg font-bold text-accent-brown">5,00 zł / osoba</span>
+                  <p className="text-[11px] text-text-sub italic mt-1">(kaucja za talerzyk)</p>
+                </div>
+                <div className="p-4 bg-[#FAF8F4]/90 rounded-xl border border-accent-terracotta/10 text-center">
+                  <span className="text-xs font-mono uppercase tracking-wider text-accent-terracotta font-bold block mb-1">Własny alkohol</span>
+                  <span className="font-sans text-lg font-bold text-accent-brown">10,00 zł / butelka</span>
+                  <p className="text-[11px] text-text-sub italic mt-1">(opłata korkowa)</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-12 p-6 bg-accent-terracotta/5 border border-accent-terracotta/10 rounded-2xl text-center max-w-xl mx-auto">
+              <p className="font-sans text-sm text-accent-brown font-medium leading-relaxed">
+                Chcesz omówić szczegóły Twojego wydarzenia (menu, aranżację sali, rezerwację terminów)?
+              </p>
+              <p className="font-sans text-xs text-text-sub/80 mt-1.5">
+                Skontaktuj się z nami telefonicznie pod numerem <span className="font-bold text-accent-terracotta">693 422 539</span> lub osobiście w lokalu!
+              </p>
+            </div>
           </div>
 
         </div>
@@ -963,6 +1040,168 @@ export default function App() {
               <p className="font-sans text-[14px] text-[#FFF8EE]/75 leading-[1.7] font-light">
                 Znajdziesz nas przy ul. Ligonia 2 — tuż w samym urokliwym centrum, w idealnym miejscu, aby się zatrzymać.
               </p>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* 7.5. SEKCJA OPINII GOŚCI — id="opinie" */}
+      <section 
+        id="opinie" 
+        className="py-24 bg-warm-cream relative z-10 border-t border-accent-terracotta/10"
+      >
+        <div className="max-w-[1140px] mx-auto px-6 md:px-8">
+          
+          {/* Nagłówek sekcji */}
+          <div className="text-center max-w-2xl mx-auto mb-16 fade-in-on-scroll opacity-0" id="reviews-header">
+            <span className="font-mono text-xs text-accent-terracotta tracking-[4px] uppercase block mb-2">
+              — opinie z google maps —
+            </span>
+            <h2 className="font-serif text-3xl md:text-[48px] text-dark-choco font-bold">
+              Co mówią nasi Goście?
+            </h2>
+            <div className="flex items-center justify-center gap-1.5 mt-4">
+              <div className="flex text-accent-gold">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 fill-accent-gold text-accent-gold" />
+                ))}
+              </div>
+              <span className="font-sans font-semibold text-sm text-dark-choco/85 ml-2">
+                5.0 / 5 gwiazdek na Google
+              </span>
+            </div>
+            <div className="w-[60px] h-1 bg-accent-terracotta mx-auto mt-6 rounded-full"></div>
+          </div>
+
+          {/* Trzy eleganckie opinie */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in-on-scroll opacity-0" id="reviews-grid">
+            
+            {/* Opinia 1 */}
+            <div className="bg-white/60 backdrop-blur-sm border border-accent-gold/20 hover:border-accent-terracotta/40 rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 group" id="review-1">
+              <div>
+                {/* Gwiazdki i logo Google */}
+                <div className="flex justify-between items-center mb-6">
+                  <div className="flex text-accent-gold">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-accent-gold text-accent-gold" />
+                    ))}
+                  </div>
+                  <span className="text-xs font-mono tracking-wider text-text-sub font-semibold flex items-center gap-1 bg-[#FAF8F4] px-2.5 py-1 rounded-full border border-accent-gold/15">
+                    <span className="text-blue-500 font-bold">G</span>
+                    <span className="text-red-500 font-bold">o</span>
+                    <span className="text-yellow-500 font-bold">o</span>
+                    <span className="text-blue-500 font-bold">g</span>
+                    <span className="text-green-500 font-bold">l</span>
+                    <span className="text-red-500 font-bold">e</span>
+                  </span>
+                </div>
+                
+                {/* Treść */}
+                <p className="font-sans text-[15px] text-text-sub italic leading-relaxed font-light mb-6">
+                  "To jedno z tych miejsc, do których wraca się z sentymentem. „Spełnione Marzenie” nie udaje – to po prostu bardzo dobra naleśnikarnia z duszą prowadzona przez pasjonatów."
+                </p>
+              </div>
+
+              {/* Autor */}
+              <div className="border-t border-accent-gold/10 pt-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-accent-terracotta/10 text-accent-terracotta flex items-center justify-center">
+                  <User className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-sans font-bold text-[14px] text-dark-choco leading-none">
+                    Gość Naleśnikarni
+                  </h4>
+                  <span className="text-[11px] font-mono text-text-sub/70 block mt-1">
+                    Opinia Google
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Opinia 2 */}
+            <div className="bg-white/60 backdrop-blur-sm border border-accent-gold/20 hover:border-accent-terracotta/40 rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 group" id="review-2">
+              <div>
+                {/* Gwiazdki i logo Google */}
+                <div className="flex justify-between items-center mb-6">
+                  <div className="flex text-accent-gold">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-accent-gold text-accent-gold" />
+                    ))}
+                  </div>
+                  <span className="text-xs font-mono tracking-wider text-text-sub font-semibold flex items-center gap-1 bg-[#FAF8F4] px-2.5 py-1 rounded-full border border-accent-gold/15">
+                    <span className="text-blue-500 font-bold">G</span>
+                    <span className="text-red-500 font-bold">o</span>
+                    <span className="text-yellow-500 font-bold">o</span>
+                    <span className="text-blue-500 font-bold">g</span>
+                    <span className="text-green-500 font-bold">l</span>
+                    <span className="text-red-500 font-bold">e</span>
+                  </span>
+                </div>
+                
+                {/* Treść */}
+                <p className="font-sans text-[15px] text-text-sub italic leading-relaxed font-light mb-6">
+                  "Naleśniki na słodko są przepyszne! 😊 Do tego bardzo miła obsługa. Zdecydowanie polecam!…"
+                </p>
+              </div>
+
+              {/* Autor */}
+              <div className="border-t border-accent-gold/10 pt-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-accent-terracotta/10 text-accent-terracotta flex items-center justify-center">
+                  <User className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-sans font-bold text-[14px] text-dark-choco leading-none">
+                    Gość Naleśnikarni
+                  </h4>
+                  <span className="text-[11px] font-mono text-text-sub/70 block mt-1">
+                    Opinia Google
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Opinia 3 */}
+            <div className="bg-white/60 backdrop-blur-sm border border-accent-gold/20 hover:border-accent-terracotta/40 rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 group" id="review-3">
+              <div>
+                {/* Gwiazdki i logo Google */}
+                <div className="flex justify-between items-center mb-6">
+                  <div className="flex text-accent-gold">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-accent-gold text-accent-gold" />
+                    ))}
+                  </div>
+                  <span className="text-xs font-mono tracking-wider text-text-sub font-semibold flex items-center gap-1 bg-[#FAF8F4] px-2.5 py-1 rounded-full border border-accent-gold/15">
+                    <span className="text-blue-500 font-bold">G</span>
+                    <span className="text-red-500 font-bold">o</span>
+                    <span className="text-yellow-500 font-bold">o</span>
+                    <span className="text-blue-500 font-bold">g</span>
+                    <span className="text-green-500 font-bold">l</span>
+                    <span className="text-red-500 font-bold">e</span>
+                  </span>
+                </div>
+                
+                {/* Treść */}
+                <p className="font-sans text-[15px] text-text-sub italic leading-relaxed font-light mb-6">
+                  "Pyszne naleśniki, dobra kawa, niedrogie drinki, polecam wszystkim odwiedzającym Kamien Śląski."
+                </p>
+              </div>
+
+              {/* Autor */}
+              <div className="border-t border-accent-gold/10 pt-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-accent-terracotta/10 text-accent-terracotta flex items-center justify-center">
+                  <User className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-sans font-bold text-[14px] text-dark-choco leading-none">
+                    Gość Naleśnikarni
+                  </h4>
+                  <span className="text-[11px] font-mono text-text-sub/70 block mt-1">
+                    Opinia Google
+                  </span>
+                </div>
+              </div>
             </div>
 
           </div>
