@@ -54,7 +54,7 @@ export default function App() {
   const [lightboxImageIndex, setLightboxImageIndex] = useState<number | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState<any>(null);
-  const [isLargeTextMode, setIsLargeTextMode] = useState(false);
+  const [isLargeTextMode, setIsLargeTextMode] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   
   // Menu horizontal scrolling controls
@@ -218,19 +218,19 @@ export default function App() {
 
           {/* Linki po prawej (Desktop) */}
           <div className="hidden md:flex items-center space-x-10" id="desktop-links">
-            <a href="#o-nas" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
+            <a href="#o-nas" className="font-sans text-[15px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
               O nas
             </a>
-            <a href="#menu" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
+            <a href="#menu" className="font-sans text-[15px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
               Menu
             </a>
-            <a href="#imprezy" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
+            <a href="#imprezy" className="font-sans text-[15px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
               Imprezy
             </a>
-            <a href="#galeria" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
+            <a href="#galeria" className="font-sans text-[15px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
               Galeria
             </a>
-            <a href="#kontakt" className="font-sans text-[13px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
+            <a href="#kontakt" className="font-sans text-[15px] font-bold uppercase tracking-[2px] text-[#FFF8EE] hover:text-accent-gold transition-colors duration-300">
               Kontakt
             </a>
           </div>
@@ -302,29 +302,19 @@ export default function App() {
         id="hero"
         className="relative min-h-screen flex items-center justify-center text-center px-6 overflow-hidden bg-cover bg-center"
         style={{
-          backgroundImage: `url('https://i.ibb.co/mrTSTj82/color-edited-image-1.jpg')`
+          backgroundImage: `url('https://i.ibb.co/dsRbhBqS/21-lip-2026-13-40-34.png')`
         }}
       >
-        {/* Transparentny naleśnik (crepe cutout) - umieszczony z boku headera */}
-        <div 
-          className="absolute -right-12 sm:right-[5%] md:right-[8%] lg:right-[12%] top-[12%] sm:top-[20%] md:top-[25%] w-36 h-36 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 animate-fade-in-up select-none pointer-events-none drop-shadow-[0_20px_45px_rgba(0,0,0,0.75)] z-10 opacity-80 sm:opacity-95"
-          style={{ animationDelay: "0.05s" }}
-        >
-          <img 
-            src="https://i.ibb.co/VrX0jyK/567717619-122104393821059314-2705947514695363768-n-Photoroom.png" 
-            alt="Naleśnik" 
-            className="w-full h-full object-contain animate-float rotate-12"
-            referrerPolicy="no-referrer"
-          />
-        </div>
-
         <div className="max-w-4xl mx-auto flex flex-col items-center pt-24 pb-28 sm:pb-16 relative z-20">
           
           {/* Dekoracyjna etykieta */}
           <p 
             id="hero-label"
-            className="font-cursive text-xl md:text-2xl text-accent-gold mb-4 animate-fade-in-up drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
-            style={{ animationDelay: "0.1s" }}
+            className="font-cursive text-xl md:text-2xl text-accent-gold mb-4 animate-fade-in-up"
+            style={{ 
+              animationDelay: "0.1s",
+              textShadow: "0 4px 20px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,1), 0 0 12px rgba(0,0,0,1), 0 0 30px rgba(0,0,0,0.95)"
+            }}
           >
             ✦ w sercu Kamienia Śląskiego ✦
           </p>
@@ -332,8 +322,11 @@ export default function App() {
           {/* Główny tytuł */}
           <h1 
             id="hero-title"
-            className="font-serif leading-none text-center select-none flex flex-col items-center animate-fade-in-up drop-shadow-[0_3px_6px_rgba(0,0,0,0.75)]"
-            style={{ animationDelay: "0.2s" }}
+            className="font-serif leading-none text-center select-none flex flex-col items-center animate-fade-in-up"
+            style={{ 
+              animationDelay: "0.2s",
+              textShadow: "0 6px 30px rgba(0,0,0,1), 0 4px 15px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,1), 0 0 45px rgba(0,0,0,0.95), 0 0 60px rgba(0,0,0,0.9)"
+            }}
           >
             <span className="text-[54px] md:text-[98px] text-[#FFF8EE] font-normal italic leading-tight">
               Spełnione
@@ -346,7 +339,7 @@ export default function App() {
           {/* Cienka dekoracyjna linia */}
           <div 
             id="hero-divider"
-            className="w-20 h-[3px] bg-accent-terracotta my-5 sm:my-7 rounded-full animate-fade-in-up shadow-sm"
+            className="w-20 h-[3px] bg-accent-terracotta my-5 sm:my-7 rounded-full animate-fade-in-up shadow-lg"
             style={{ animationDelay: "0.3s" }}
           ></div>
 
@@ -356,7 +349,7 @@ export default function App() {
             className="font-sans text-lg md:text-2xl text-accent-wheat font-light tracking-[1px] max-w-2xl px-4 animate-fade-in-up"
             style={{ 
               animationDelay: "0.4s",
-              textShadow: "0 2px 12px rgba(0, 0, 0, 0.95), 0 1px 3px rgba(0, 0, 0, 0.9)"
+              textShadow: "0 5px 25px rgba(0,0,0,1), 0 3px 10px rgba(0,0,0,1), 0 0 15px rgba(0,0,0,1), 0 0 35px rgba(0,0,0,0.95)"
             }}
           >
             Pyszne naleśniki francuskie na słodko i wytrawnie
@@ -368,7 +361,7 @@ export default function App() {
             className="font-mono text-xs md:text-sm text-accent-wheat/80 tracking-[4px] mt-3 uppercase animate-fade-in-up"
             style={{ 
               animationDelay: "0.5s",
-              textShadow: "0 2px 10px rgba(0, 0, 0, 0.95), 0 1px 2px rgba(0, 0, 0, 0.9)"
+              textShadow: "0 4px 20px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,1), 0 0 12px rgba(0,0,0,1), 0 0 30px rgba(0,0,0,0.95)"
             }}
           >
             Kawa · Lody · Zimne napoje
@@ -439,7 +432,7 @@ export default function App() {
               </h2>
               <div className="w-[60px] h-1 bg-accent-terracotta my-5 rounded-full"></div>
               
-              <div className="space-y-6 text-[15px] md:text-[17px] text-text-sub font-light leading-relaxed">
+              <div className="space-y-6 text-[17px] md:text-[19px] text-text-sub font-light leading-relaxed">
                 <p>
                   Są marzenia, które czekają na swój moment. Moje dojrzewało przez wiele lat. Dziś stało się rzeczywistością.
                 </p>
@@ -522,7 +515,7 @@ export default function App() {
             <h2 className="font-serif text-3xl md:text-[48px] text-dark-choco font-bold">
               Nasze Menu
             </h2>
-            <p className="font-sans text-base md:text-lg text-text-sub mt-4 font-light leading-relaxed">
+            <p className="font-sans text-lg md:text-xl text-text-sub mt-4 font-light leading-relaxed">
               Poznaj nasze stałe i wyjątkowe propozycje przygotowywane każdego dnia z sercem i pasją.
             </p>
             <div className="w-[60px] h-1 bg-accent-terracotta mx-auto mt-6 rounded-full"></div>
@@ -906,7 +899,7 @@ export default function App() {
             <h2 className="font-serif text-3xl md:text-[48px] text-dark-choco font-bold leading-tight">
               Urodziny, Imprezy & Warsztaty
             </h2>
-            <p className="font-sans text-base md:text-lg text-text-sub mt-4 font-light leading-relaxed">
+            <p className="font-sans text-lg md:text-xl text-text-sub mt-4 font-light leading-relaxed">
               Naleśnikarnia Spełnione Marzenie to idealne miejsce na Twoje wydarzenie. Nasza przytulna atmosfera, profesjonalne podejście i pyszne menu sprawią, że każda chwila będzie wyjątkowa.
             </p>
             <div className="w-[60px] h-1 bg-accent-terracotta mx-auto mt-6 rounded-full"></div>
@@ -996,7 +989,7 @@ export default function App() {
             <h2 className="font-serif text-3xl md:text-[48px] text-dark-choco font-bold">
               Galeria Zdjęć
             </h2>
-            <p className="font-sans text-base md:text-lg text-text-sub mt-4 font-light leading-relaxed">
+            <p className="font-sans text-lg md:text-xl text-text-sub mt-4 font-light leading-relaxed">
               Zobacz naszą przytulną naleśnikarnię, klimatyczne wnętrza oraz pyszne potrawy przygotowywane na miejscu.
             </p>
             <div className="w-[60px] h-1 bg-accent-terracotta mx-auto mt-6 rounded-full"></div>
